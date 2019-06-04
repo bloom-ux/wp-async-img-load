@@ -1,0 +1,13 @@
+{
+    "name": "bloom-ux/wp-async-img-load",
+    "description": "Enable image lazy loading",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Felipe Lavín Z.",
+            "email": "felipe@bloom-ux.com"
+        }
+    ],
+    "require": {}
+}
