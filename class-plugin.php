@@ -21,7 +21,33 @@ class Plugin {
 			$attr['data-srcset'] = $attr['srcset'];
 			unset( $attr['srcset'] );
 		}
-		$attr['src'] = plugins_url( 'blank.png', __FILE__ );
+
+		$registered_sizes = wp_get_additional_image_sizes();
+		$attachment_meta  = get_post_meta( $attachment->ID, '_wp_attachment_metadata', true );
+
+		if ( ! isset( $registered_sizes[ $size ] ) ) {
+			$attr['src'] = plugins_url( 'blank.png', __FILE__ );
+			return $attr;
+		}
+
+		$initial_size = $size;
+		$current_size = $registered_sizes[ $size ];
+
+		$aspect_ratio = round( (int) $registered_sizes[ $size ]['height'] / (int) $registered_sizes[ $size ]['width'], 2 );
+		foreach ( $attachment_meta['sizes'] as $_size => $_atts ) {
+			$this_ratio = round( (int) $_atts['height'] / (int) $_atts['width'], 2 );
+			if ( $aspect_ratio === $this_ratio && $_atts['height'] < $current_size['height'] ) {
+				$current_size = $_atts;
+				$size = $_size;
+			}
+		}
+
+		if ( $size === $initial_size ) {
+			$attr['src'] = plugins_url( 'blank.png', __FILE__ );
+		}
+
+		// reemplazar src por la versión más pequeña en la misma proporción de aspecto
+		$attr['src'] = wp_get_attachment_image_url( $attachment->ID, $size );
 		return $attr;
 	}
 }
