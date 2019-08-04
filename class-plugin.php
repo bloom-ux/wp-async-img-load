@@ -10,7 +10,7 @@ class Plugin {
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'lazysizes', plugins_url( 'node_modules/lazysizes/lazysizes.min.js', __FILE__ ), array(), '5.1.0', false );
 	}
-	public function filter_image_attributes( array $attr, \WP_Post $attachment, $size ) : array {
+	public function filter_image_attributes( array $attr, ?\WP_Post $attachment, $size ) : array {
 		if ( empty( $attr['class'] ) ) {
 			$attr['class'] = 'lazyload';
 		} else {
