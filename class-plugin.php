@@ -3,9 +3,17 @@
 namespace Bloom_UX\WP_Async_Img_Load;
 
 class Plugin {
+	private static $instance = null;
 	public function init() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_image_attributes'), 9999, 3 );
+	}
+	public static function get_instance() {
+		if ( ! static::$instance ) {
+			$called_class = get_called_class();
+			static::$instance = new $called_class;
+		}
+		return static::$instance;
 	}
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'lazysizes', plugins_url( 'node_modules/lazysizes/lazysizes.min.js', __FILE__ ), array(), '5.1.0', false );

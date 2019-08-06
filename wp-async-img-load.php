@@ -13,5 +13,5 @@ namespace Bloom_UX\WP_Async_Img_Load;
 require_once __DIR__ .'/class-plugin.php';
 require_once __DIR__ .'/functions.php';
 
-$plugin = new Plugin();
+$plugin = Plugin::get_instance();
 $plugin->init();
