@@ -33,15 +33,22 @@ class Plugin {
 		$registered_sizes = wp_get_additional_image_sizes();
 		$attachment_meta  = get_post_meta( $attachment->ID, '_wp_attachment_metadata', true );
 
-		if ( ! isset( $registered_sizes[ $size ] ) ) {
+		if ( $size !== 'full' && ! isset( $registered_sizes[ $size ] ) ) {
 			$attr['src'] = plugins_url( 'blank.png', __FILE__ );
 			return $attr;
 		}
 
 		$initial_size = $size;
-		$current_size = $registered_sizes[ $size ];
+		$current_size = $size === 'full' ? [
+			'file' => $attachment_meta['file'],
+			'width' => $attachment_meta['width'],
+			'height' => $attachment_meta['height']
+		] : $registered_sizes[ $size ];
 
-		$aspect_ratio = round( (int) $registered_sizes[ $size ]['height'] / (int) $registered_sizes[ $size ]['width'], 2 );
+		$height = $size === 'full' ? (int) $attachment_meta['height'] : $registered_sizes[ $size ]['height'];
+		$width  = $size === 'full' ? (int) $attachment_meta['width']  : $registered_sizes[ $size ]['width'];
+
+		$aspect_ratio = round( $height / $width, 2 );
 		foreach ( $attachment_meta['sizes'] as $_size => $_atts ) {
 			$this_ratio = round( (int) $_atts['height'] / (int) $_atts['width'], 2 );
 			if ( $aspect_ratio === $this_ratio && $_atts['height'] < $current_size['height'] ) {
