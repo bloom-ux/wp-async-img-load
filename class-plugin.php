@@ -19,6 +19,16 @@ class Plugin {
 		wp_enqueue_script( 'lazysizes', plugins_url( 'node_modules/lazysizes/lazysizes.min.js', __FILE__ ), array(), '5.1.0', false );
 	}
 	public function filter_image_attributes( array $attr, ?\WP_Post $attachment, $size ) : array {
+		if ( ! $attachment ) {
+			return $attr;
+		}
+
+		$attachment_meta  = get_post_meta( $attachment->ID, '_wp_attachment_metadata', true );
+
+		if ( $size !== 'full' && empty( $attachment_meta['sizes'] ) ) {
+			return $attr;
+		}
+
 		if ( empty( $attr['class'] ) ) {
 			$attr['class'] = 'lazyload';
 		} else {
@@ -31,7 +41,6 @@ class Plugin {
 		}
 
 		$registered_sizes = wp_get_additional_image_sizes();
-		$attachment_meta  = get_post_meta( $attachment->ID, '_wp_attachment_metadata', true );
 
 		if ( $size !== 'full' && ! isset( $registered_sizes[ $size ] ) ) {
 			$attr['src'] = plugins_url( 'blank.png', __FILE__ );
