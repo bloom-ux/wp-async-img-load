@@ -49,11 +49,13 @@ class Plugin {
 		$width  = $size === 'full' ? (int) $attachment_meta['width']  : $registered_sizes[ $size ]['width'];
 
 		$aspect_ratio = round( $height / $width, 2 );
-		foreach ( $attachment_meta['sizes'] as $_size => $_atts ) {
-			$this_ratio = round( (int) $_atts['height'] / (int) $_atts['width'], 2 );
-			if ( $aspect_ratio === $this_ratio && $_atts['height'] < $current_size['height'] ) {
-				$current_size = $_atts;
-				$size = $_size;
+		if ( ! empty( $attachment_meta['sizes'] ) ) {
+			foreach ( $attachment_meta['sizes'] as $_size => $_atts ) {
+				$this_ratio = round( (int) $_atts['height'] / (int) $_atts['width'], 2 );
+				if ( $aspect_ratio === $this_ratio && $_atts['height'] < $current_size['height'] ) {
+					$current_size = $_atts;
+					$size = $_size;
+				}
 			}
 		}
 
