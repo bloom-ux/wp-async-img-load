@@ -23,6 +23,10 @@ class Plugin {
 			return $attr;
 		}
 
+		if ( isset( $attr['data-load'] ) && $attr['data-load'] === 'eager' ) {
+			return $attr;
+		}
+
 		$attachment_meta  = get_post_meta( $attachment->ID, '_wp_attachment_metadata', true );
 
 		if ( $size !== 'full' && empty( $attachment_meta['sizes'] ) ) {
